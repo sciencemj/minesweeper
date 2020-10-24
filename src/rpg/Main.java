@@ -106,12 +106,9 @@ public class Main extends JavaPlugin{
                 }
             }
         }else if (command.getName().equals("magic")){
-            MagicI magic = new MagicI();
-            magic.maker = sender.getName();
-            magic.name = args[0];
-            magic.color = Color.fromRGB(Integer.parseInt(args[2]),Integer.parseInt(args[3]),Integer.parseInt(args[4]));
-            magic.length = Integer.parseInt(args[1]);
-            magic.type = 0;
+            MagicI magic = new MagicI(sender.getName(),args[0],Integer.parseInt(args[1]),0,
+                    Color.fromRGB(Integer.parseInt(args[2]),Integer.parseInt(args[3]),Integer.parseInt(args[4])),
+                    Float.parseFloat(args[5]));
             if (sender instanceof Player) {
                 Player p = (Player)sender;
                 ItemMeta meta = p.getInventory().getItemInMainHand().getItemMeta();
@@ -126,7 +123,6 @@ public class Main extends JavaPlugin{
                     meta.setLore(list);
                     p.getInventory().getItemInMainHand().setItemMeta(meta);
                 }
-                magic.play(p);
             }
             sender.sendMessage(magic.maker);
             magicArray.add(magic);

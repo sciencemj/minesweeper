@@ -36,14 +36,16 @@ public class CancelingTask extends BukkitRunnable {
                 p.getWorld().playSound(l, Sound.ENTITY_FIREWORK_ROCKET_BLAST,10,10);
                 for (Entity e : p.getWorld().getNearbyEntities(l,3,3,3)){
                     LivingEntity livingEntity = (LivingEntity)e;
-                    ((LivingEntity) e).damage(5);
+                    ((LivingEntity) e).damage(magicI.damage);
                 }
-                this.cancel();
+                //this.cancel();
             }else {
                 Particle.DustOptions dust = new Particle.DustOptions(magicI.color, 1);
-                p.sendMessage("s");
                 p.getWorld().spawnParticle(Particle.REDSTONE, path.poll(), 1, 0, 0, 0, 0, dust);
             }
+        }else {
+            p.sendMessage("stop");
+            this.cancel();
         }
     }
 }

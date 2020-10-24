@@ -17,17 +17,26 @@ import java.util.Queue;
 public class MagicI {
     String maker;
     String name;
-    int length;
+    int range;
+    float damage;
     int type;
     Color color;
     Queue<Location> path = new LinkedList<Location>();
+    public MagicI(String maker,String name,int range,int type,Color color,float damage){
+        this.maker = maker;
+        this.name = name;
+        this.range = range;
+        this.type = type;
+        this.damage = damage;
+        this.color = color;
+    }
     void play(Player p){
         int count = 0;
         switch(type){
             case 0:
                 Location block = p.getEyeLocation();
                 Vector loc = p.getLocation().getDirection().multiply(0.5f);
-                for (int i = 0; i < length; i++) {
+                for (int i = 0; i < range; i++) {
                     block = new Vector(block.getX() + loc.getX(), block.getY() + loc.getY(), block.getZ() + loc.getZ()).toLocation(p.getWorld());
                     if (!block.getBlock().getType().equals(Material.AIR)) {
                         //block.getWorld().createExplosion(block,0.1f);
