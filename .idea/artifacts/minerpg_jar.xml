@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="minerpg:jar">
+    <output-path>$USER_HOME$/Desktop/servers/1.16.3(lastest)/plugins</output-path>
+    <root id="archive" name="minerpg.jar">
+      <element id="module-output" name="minerpg" />
+      <element id="extracted-dir" path="/Volumes/T7/plugin_core/spigot-1.16.3.jar" path-in-jar="/" />
+      <element id="file-copy" path="$PROJECT_DIR$/plugin.yml" />
+      <element id="file-copy" path="$PROJECT_DIR$/src/rpg/Main.java" />
+      <element id="file-copy" path="$PROJECT_DIR$/src/rpg/MainEvent.java" />
+    </root>
+  </artifact>
+</component>

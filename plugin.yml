@@ -1,0 +1,15 @@
+name: minerpg
+version: 1.0.0
+main: rpg.Main
+description: rpg plugin by sciencemj
+
+commands:
+  command:
+      description: d
+      usage: d
+  rmb:
+    description: start rmb
+    usage: /rmb
+  magic:
+    description: create new magic
+    usage: /magic
