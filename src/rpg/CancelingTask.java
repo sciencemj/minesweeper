@@ -29,7 +29,7 @@ public class CancelingTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        if(path.isEmpty()) {
+        if(!path.isEmpty()) {
             if (path.size() == 1){
                 Location l = path.poll();
                 p.getWorld().spawnParticle(Particle.FLASH, l, 1, 0, 0, 0, 0);
@@ -41,6 +41,7 @@ public class CancelingTask extends BukkitRunnable {
                 this.cancel();
             }else {
                 Particle.DustOptions dust = new Particle.DustOptions(magicI.color, 1);
+                p.sendMessage("s");
                 p.getWorld().spawnParticle(Particle.REDSTONE, path.poll(), 1, 0, 0, 0, 0, dust);
             }
         }
