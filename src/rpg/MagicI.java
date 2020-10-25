@@ -11,7 +11,9 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class MagicI {
@@ -19,10 +21,11 @@ public class MagicI {
     String name;
     int range;
     float damage;
-    int type;
+    String type;
     Color color;
     Queue<Location> path = new LinkedList<Location>();
-    public MagicI(String maker,String name,int range,int type,Color color,float damage){
+    List<BukkitTask> taskList = new ArrayList<BukkitTask>();
+    public MagicI(String maker,String name,String type,int range,Color color,float damage){
         this.maker = maker;
         this.name = name;
         this.range = range;
@@ -33,7 +36,7 @@ public class MagicI {
     void play(Player p){
         int count = 0;
         switch(type){
-            case 0:
+            case "0":
                 Location block = p.getEyeLocation();
                 Vector loc = p.getLocation().getDirection().multiply(0.5f);
                 for (int i = 0; i < range; i++) {
@@ -45,13 +48,14 @@ public class MagicI {
                     path.offer(block);
                 }
                 BukkitTask task = new CancelingTask(Main.pluginm, this, p).runTaskTimer(Main.pluginm,0L,1L);
+                taskList.add(task);
                 p.sendMessage("0");
                 break;
-            case 1:
+            case "1":
 
         }
     }
-    public void stop(int i){
-        Bukkit.getScheduler().cancelTask(i);
+    String getInfo(){
+        return (maker + " " + name + " " + type + " " + range + " " + color.getRed() + " " + color.getGreen() + " " + color.getBlue() + " " + damage);
     }
 }

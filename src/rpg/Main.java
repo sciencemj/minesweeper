@@ -16,6 +16,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
+import java.io.*;
 import java.util.*;
 
 public class Main extends JavaPlugin{
@@ -69,6 +70,28 @@ public class Main extends JavaPlugin{
                 }
             }
         }, 0L, 5L);
+        String line = null;
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader("save.txt"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        while(true){
+            try {
+                line = reader.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (line == null)
+                break;
+            String[] str = line.split(" ");
+            switch (str[2]){
+                case "0":
+                    Color color = Color.fromRGB(Integer.parseInt(str[4]),Integer.parseInt(str[5]),Integer.parseInt(str[6]));
+                    magicArray.add(new MagicI(str[0],str[1],str[2],Integer.parseInt(str[3]),color,Float.parseFloat(str[7])));
+            }
+        }
     }
 
     @Override
@@ -106,32 +129,64 @@ public class Main extends JavaPlugin{
                 }
             }
         }else if (command.getName().equals("magic")){
-            MagicI magic = new MagicI(sender.getName(),args[0],Integer.parseInt(args[1]),0,
-                    Color.fromRGB(Integer.parseInt(args[2]),Integer.parseInt(args[3]),Integer.parseInt(args[4])),
-                    Float.parseFloat(args[5]));
-            if (sender instanceof Player) {
-                Player p = (Player)sender;
-                ItemMeta meta = p.getInventory().getItemInMainHand().getItemMeta();
-                if (meta.hasLore()) {
-                    List<String> list = meta.getLore();
-                    list.add(magic.name);
-                    meta.setLore(list);
-                    p.getInventory().getItemInMainHand().setItemMeta(meta);
-                }else {
-                    List<String> list = new ArrayList<String>();
-                    list.add(magic.name);
-                    meta.setLore(list);
-                    p.getInventory().getItemInMainHand().setItemMeta(meta);
+            if (args[0].equals("make")) {
+                switch (args[2]) {
+                    case "0":
+                        if (args.length == 8){
+                            MagicI magic = new MagicI(sender.getName(), args[1], args[2], Integer.parseInt(args[3]),
+                                    Color.fromRGB(Integer.parseInt(args[4]), Integer.parseInt(args[5]), Integer.parseInt(args[6])),
+                                    Float.parseFloat(args[7]));
+
+                            sender.sendMessage(magic.maker);
+                            magicArray.add(magic);
+                        }else {
+                            sender.sendMessage("/magic make " + ChatColor.YELLOW + "<name> <type> <range> <red> <green> <blue> <damage>");
+                        }
+                        break;
+                }
+            }else if (args[0].equals("item")){
+                if (sender instanceof Player) {
+                    Player p = Bukkit.getPlayer(args[1]);
+                    ItemMeta meta = p.getInventory().getItemInMainHand().getItemMeta();
+                    MagicI magic = null;
+                    for (MagicI m:magicArray)
+                        if (m.name.equals(args[2])) magic = m;
+                    if (meta.hasLore()) {
+                        List<String> list = meta.getLore();
+                        list.add(magic.name);
+                        meta.setLore(list);
+                        p.getInventory().getItemInMainHand().setItemMeta(meta);
+                    } else {
+                        List<String> list = new ArrayList<String>();
+                        list.add(magic.name);
+                        meta.setLore(list);
+                        p.getInventory().getItemInMainHand().setItemMeta(meta);
+                    }
+                }
+            }else if (args[0].equals("list")){
+                for (MagicI magic : magicArray){
+                    sender.sendMessage(magic.name);
                 }
             }
-            sender.sendMessage(magic.maker);
-            magicArray.add(magic);
         }
         return false;
     }
 
+    void saveData() throws IOException {
+        FileWriter writer = new FileWriter("save.txt");
+        for (MagicI magic : magicArray){
+            writer.write(magic.getInfo()+"\r\n");
+        }
+        writer.close();
+
+    }
+
     @Override
     public void onDisable() {
-
+        try {
+            saveData();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
