@@ -1,15 +1,12 @@
-name: minerpg
+name: minefind
 version: 1.0.0
 main: rpg.Main
-description: rpg plugin by sciencemj
+description: minefind plugin by sciencemj
 
 commands:
-  command:
-      description: d
-      usage: d
-  rmb:
-    description: start rmb
-    usage: /rmb
-  magic:
-    description: create new magic
-    usage: /magic
+  minestart:
+    description: start
+    usage: /minestart
+  minestop:
+    description: stop
+    usage: /minestop
