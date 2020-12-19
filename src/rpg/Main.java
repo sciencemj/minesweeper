@@ -106,6 +106,9 @@ public class Main extends JavaPlugin{
             stand.setHealth(0D);
         }
         mines = null;
+        MainEvent.correct = 0;
+        MainEvent.wrong = 0;
+        //MainEvent.over = true; not need
     }
 
     @Override

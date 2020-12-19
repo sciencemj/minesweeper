@@ -3,6 +3,7 @@ package rpg;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,7 +12,9 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.Plugin;
 
 public class MainEvent implements Listener {
@@ -19,7 +22,9 @@ public class MainEvent implements Listener {
     public void PlayerMove(PlayerMoveEvent e){
         Player p = e.getPlayer();
     }
-
+    public static boolean over = true;
+    public static int correct = 0;
+    public static int wrong = 0;
     @EventHandler
     public void playerEvent(PlayerInteractEvent e){
         Player p = e.getPlayer();
@@ -79,7 +84,72 @@ public class MainEvent implements Listener {
                     }
                 }
             }
+            if (isOver()){
+                p.sendTitle(ChatColor.GREEN + "WIN!!","",60,20,20);
+                Firework firework = p.getWorld().spawn(p.getLocation(), Firework.class);
+                FireworkMeta meta = firework.getFireworkMeta();
+                FireworkEffect.Builder builder = FireworkEffect.builder();
+                builder.flicker(true).trail(true).with(FireworkEffect.Type.STAR).withColor(Color.YELLOW).withFade(Color.RED);
+                meta.addEffect(builder.build());
+                meta.setPower(1);
+                firework.setFireworkMeta(meta);
+                Main.init();
+            }
+        }else if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            //p.sendMessage("right clicked");
+            EquipmentSlot slot = e.getHand();
+            if (slot.equals(EquipmentSlot.HAND)) {
+                Block b = e.getClickedBlock();
+                for (int i = 0; i < Main.mines.length; i++) {
+                    for (int j = 0; j < Main.mines.length; j++) {
+                        if (Main.mines[i][j].getLocation().equals(b.getLocation())) {
+                            p.sendMessage(b.getType().toString());
+                            if (b.getType().equals(Material.IRON_BLOCK)) {
+                                b.setType(Material.STONE);
+                                if (Main.map[i][j] == -1) {
+                                    correct--;
+                                } else {
+                                    wrong--;
+                                }
+                            }else if (b.getType().equals(Material.STONE)) {
+                                b.setType(Material.IRON_BLOCK);
+                                if (Main.map[i][j] == -1) {
+                                    correct++;
+                                } else {
+                                    wrong++;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (isOver()) {
+                    p.sendTitle(ChatColor.GREEN + "WIN!!", "", 60, 20, 20);
+                    Firework firework = p.getWorld().spawn(p.getLocation(), Firework.class);
+                    FireworkMeta meta = firework.getFireworkMeta();
+                    FireworkEffect.Builder builder = FireworkEffect.builder();
+                    builder.flicker(true).trail(true).with(FireworkEffect.Type.STAR).withColor(Color.YELLOW).withFade(Color.RED);
+                    meta.addEffect(builder.build());
+                    meta.setPower(1);
+                    firework.setFireworkMeta(meta);
+                    Main.init();
+                }
+            }
         }
+    }
+    public boolean isOver(){
+        boolean isover = true;
+        for (Block[] bs : Main.mines){
+            for (Block b : bs){
+                if (b.getType().equals(Material.STONE)) {
+                    isover = false;
+                }
+            }
+        }
+        if (isover) {
+            if (correct == Main.bombs && wrong == 0)
+                return true;
+        }
+        return false;
     }
 
     public ArmorStand nameMaker(Block b,String s){
