@@ -2,6 +2,7 @@ name: minefind
 version: 1.0.0
 main: rpg.Main
 description: minefind plugin by sciencemj
+api-version: 1.16
 
 commands:
   minestart:

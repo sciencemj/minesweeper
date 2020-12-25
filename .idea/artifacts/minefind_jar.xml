@@ -2,9 +2,6 @@
   <artifact type="jar" name="minefind:jar">
     <output-path>/Volumes/T7/servers/1.16.4/plugins</output-path>
     <root id="archive" name="minerpg.jar">
-      <element id="extracted-dir" path="/Volumes/T7/plugin_core/spigot-1.16.4.jar" path-in-jar="/" />
-      <element id="file-copy" path="$PROJECT_DIR$/src/rpg/Main.java" />
-      <element id="file-copy" path="$PROJECT_DIR$/src/rpg/MainEvent.java" />
       <element id="file-copy" path="$PROJECT_DIR$/plugin.yml" />
       <element id="module-output" name="minerpg" />
     </root>
